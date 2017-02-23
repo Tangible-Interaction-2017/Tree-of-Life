@@ -1,14 +1,15 @@
 public abstract class Drawable {
-  protected float x, y;
+  protected float _x, _y;
   
   Drawable(float x, float y) {
-    this.x = x;
-    this.y = y;
+    _x = x;
+    _y = y;
   }
   
-  abstract void draw(float x, float y);
-  
-  void update() {
-    draw(x, y);
-  }
+  abstract void render();
+
+  void setX(float x) { _x = x; }  
+  void setY(float y) { _y = y; }
+  float getX() { return _x; }
+  float getY() { return _y; }
 }
