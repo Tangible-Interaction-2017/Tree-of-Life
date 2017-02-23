@@ -2,9 +2,13 @@ public class ToolView extends GrabbableView {
 
   ToolView(float x, float y) {
     super(x, y); 
+    
+    addLinearAnimation("pull_back", x, y, 0.25);
   }
   
   void render() {
+    super.render();
+    
     stroke(0);
     strokeWeight(2);
     
@@ -12,6 +16,6 @@ public class ToolView extends GrabbableView {
     else                  fill(180);
     
     final float diameter = 2*getRadius(); 
-    ellipse(getX(), getY(), diameter, diameter);
+    ellipse(getPosition().x, getPosition().y, diameter, diameter);
   }
 }

@@ -1,10 +1,10 @@
-public abstract class GrabbableView extends Drawable {
+public abstract class GrabbableView extends Animatable {
   private boolean _pressed;
   private boolean _hovered;
   private float _radius;
   
   GrabbableView(float x, float y, float radius) {
-    super(x, y);
+    super(x, y, radius*2, radius*2);
     _pressed = false;
     _hovered = false;
     _radius = radius;

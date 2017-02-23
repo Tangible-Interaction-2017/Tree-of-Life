@@ -1,6 +1,6 @@
 public class TreeView extends Animatable {
-  TreeView(float x, float y) {
-    super(x, y, 0.5, 15);
+  TreeView() {
+    super(0, 0, width/10, 1.392 * width/10);
     
     String[] fileNames = {
       "images/tree_stage_0_0.png", 
@@ -14,7 +14,7 @@ public class TreeView extends Animatable {
     int[] indices = {
       0, 1, 2, 3, 4, 5, 6
     };
-    addAnimation("stage_0", fileNames, indices, 0.5);
+    addFrameAnimation("stage_0", fileNames, indices, 0.7);
     
     fileNames = new String[] {
       "images/tree_stage_0_dying_0.png", 
@@ -25,6 +25,6 @@ public class TreeView extends Animatable {
     indices = new int[] {
       0, 1, 2, 3
     };
-    addAnimation("stage_0_dying", fileNames, indices, 0.5);
+    addFrameAnimation("stage_0_dying", fileNames, indices, 1.0);
   }
 }

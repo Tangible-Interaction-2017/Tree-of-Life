@@ -1,16 +1,16 @@
 public abstract class GrabbableController {
   private GrabbableView _view;
   private boolean _pressed;
-  private float _dragOffsetX;
-  private float _dragOffsetY;
+  private Vector2 _dragOffset;
   
   GrabbableController(GrabbableView view) {
     this._view = view;
     this._pressed = false;
+    this._dragOffset = new Vector2(0, 0);
   }
   
   boolean isCursorInside() {
-    double distance = Math.sqrt(Math.pow(mouseX-_view.getX(), 2) + Math.pow(mouseY-_view.getY(), 2));
+    double distance = Math.sqrt(Math.pow(mouseX-_view.getPosition().x, 2) + Math.pow(mouseY-_view.getPosition().y, 2));
     return distance <= _view.getRadius();
   }
   
@@ -19,21 +19,19 @@ public abstract class GrabbableController {
   }
   
   void mouseMove() {
-    _view.setX(mouseX);
-    _view.setY(mouseY);
+    _view.setPosition(mouseX, mouseY);
   }
   
   void mousePress() {
     _pressed = isCursorInside();
     _view.setPressed(_pressed);
-    _dragOffsetX = _view.getX() - mouseX;
-    _dragOffsetY = _view.getY() - mouseY;
+    _dragOffset.x = _view.getPosition().x - mouseX;
+    _dragOffset.y = _view.getPosition().y - mouseY;
   }
   
   void mouseDrag() {
   if (_pressed) {
-    _view.setX(mouseX+this._dragOffsetX);
-    _view.setY(mouseY+this._dragOffsetY);
+    _view.setPosition(mouseX + _dragOffset.x, mouseY + _dragOffset.y);
   }
 };
   
