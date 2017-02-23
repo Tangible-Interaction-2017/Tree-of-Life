@@ -1,6 +1,5 @@
 public class ToolView extends GrabbableView {
-  private float _speed = 1;
-  
+
   ToolView(float x, float y) {
     super(x, y); 
   }
@@ -9,8 +8,8 @@ public class ToolView extends GrabbableView {
     stroke(0);
     strokeWeight(2);
     
-    if (isHovered())      fill(120);
-    else                  fill(100);
+    if (isHovered())      fill(240);
+    else                  fill(180);
     
     final float diameter = 2*getRadius(); 
     ellipse(getX(), getY(), diameter, diameter);

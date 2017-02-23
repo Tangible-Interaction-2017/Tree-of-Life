@@ -1,7 +1,3 @@
-double distance(double x0, double y0, double x1, double y1) {
-  return Math.sqrt(Math.pow(x1-x0, 2) + Math.pow(y1-y0, 2));
-}
-
 public abstract class GrabbableController {
   private GrabbableView _view;
   private boolean _pressed;
@@ -14,7 +10,8 @@ public abstract class GrabbableController {
   }
   
   boolean isCursorInside() {
-    return distance(mouseX, mouseY, _view.getX(), _view.getY()) <= _view.getRadius();
+    double distance = Math.sqrt(Math.pow(mouseX-_view.getX(), 2) + Math.pow(mouseY-_view.getY(), 2));
+    return distance <= _view.getRadius();
   }
   
   void mouseHover() {

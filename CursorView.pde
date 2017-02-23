@@ -9,7 +9,7 @@ public class CursorView extends GrabbableView {
   }
   
   void render() {
-    if (isPressed()) image(_closed, getX()-50, getY()-52);
-    else             image(_opened, getX()-60, getY()-82);
+    if (isPressed()) image(_closed, getX()-40, getY()-32);
+    else             image(_opened, getX()-54, getY()-71);
   }
 }

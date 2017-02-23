@@ -1,19 +1,31 @@
 // Views
-CursorView cursorView;
+TreeView treeView;
 ToolView toolView;
+CursorView cursorView;
 
 // Controllers
-CursorController cursorController;
 ToolController toolController;
+CursorController cursorController;
+
+void startAnimations() {
+  treeView.start("stage_0_dying");
+}
+
+void stopAnimations() {
+  treeView.stop();
+}
 
 void setup() {
-  size(500, 500);
+  fullScreen();
   
+  treeView = new TreeView(0, 0);
+  toolView = new ToolView(50, 50);
   cursorView = new CursorView(mouseX, mouseY);
-  toolView = new ToolView(250, 250);
   
-  cursorController = new CursorController(cursorView);
   toolController = new ToolController(toolView);
+  cursorController = new CursorController(cursorView);
+  
+  startAnimations();
 }
 
 void mouseMoved() {
@@ -22,22 +34,27 @@ void mouseMoved() {
 }
 
 void mousePressed() {
-  cursorController.mousePress();
   toolController.mousePress();
+  cursorController.mousePress();
 }
 
 void mouseDragged() {
-  cursorController.mouseDrag();
   toolController.mouseDrag();
+  cursorController.mouseDrag();
 }
 
 void mouseReleased() {
-  cursorController.mouseRelease();
   toolController.mouseRelease();
+  cursorController.mouseRelease();
+}
+
+void keyPressed() {
+  if (key == 'q' || key == 'Q') exit();
 }
 
 void draw() {
-  background(55);
+  background(255);
+  treeView.render();
   toolView.render();
   cursorView.render();
 }

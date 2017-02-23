@@ -1,5 +1,5 @@
 public abstract class Drawable {
-  protected float _x, _y;
+  private float _x, _y;
   
   Drawable(float x, float y) {
     _x = x;
