@@ -27,4 +27,8 @@ public class Vector2 {
     this.x = x;
     this.y = y;
   }
+  
+  Vector2 clone() {
+    return new Vector2(x, y);
+  }
 }

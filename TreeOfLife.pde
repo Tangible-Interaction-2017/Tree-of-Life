@@ -2,76 +2,69 @@ boolean toggle = false;
 
 // Views
 TreeView treeView;
-ToolView[] toolViews;
+ToolView waterToolView;
+ToolView fireToolView;
+ToolView windToolView;
 CursorView cursorView;
 
 // Controllers
-ToolController[] toolControllers;
+GrabbableController waterToolController;
+GrabbableController fireToolController;
+GrabbableController windToolController;
 CursorController cursorController;
 
 void startAnimations() {
   if (!toggle) {
-    treeView.stop("stage_0_dying");
     treeView.start("stage_0");
   } else {
-    treeView.stop("stage_0");
     treeView.start("stage_0_dying");
   }
 }
 
 void setup() {
   fullScreen();
+  noCursor();
   
   treeView = new TreeView();
-  toolControllers = new ToolController[5];
   treeView.setPosition((width-treeView.getDimensions().x)/2,
                        height/8*5-treeView.getDimensions().y+20);
-  
-  toolViews = new ToolView[5];
-  for (int i = 0; i < 5; i++) {
-    ToolView toolView = new ToolView(width/2-200*(i-2), height-100);
-    toolViews[i] = toolView;
-    toolControllers[i] = new ToolController(toolView);
-  }
+
+  waterToolView = new ToolView(ToolType.WATER, width/2-300, height-100);
+  fireToolView  = new ToolView(ToolType.FIRE,  width/2,     height-100);  
+  windToolView  = new ToolView(ToolType.WIND,  width/2+300, height-100);
+  waterToolController = new ToolController(waterToolView);
+  fireToolController  = new ToolController(fireToolView);
+  windToolController  = new ToolController(windToolView);
+
   
   cursorView = new CursorView(mouseX, mouseY);
   cursorController = new CursorController(cursorView);
   
-  startAnimations();
+  treeView.start("stage_0");
 }
 
 void mouseMoved() {
-  for (ToolController toolController : toolControllers) {
-    toolController.mouseHover();
-  }
-  
   cursorController.mouseMove();
 }
 
 void mousePressed() {
-  for (ToolController toolController : toolControllers) {
-    toolController.mousePress();
-  }
-  
+  waterToolController.mousePress();
+  fireToolController.mousePress();
+  windToolController.mousePress();
   cursorController.mousePress();
 }
 
 void mouseDragged() {
-  for (ToolController toolController : toolControllers) {
-    toolController.mouseDrag();
-  }
-  
+  waterToolController.mouseDrag();
+  fireToolController.mouseDrag();
+  windToolController.mouseDrag();
   cursorController.mouseDrag();
 }
 
 void mouseReleased() {
-  for (ToolController toolController : toolControllers) {
-    toolController.mouseRelease();
-  }
-  for (ToolView toolView : toolViews) {
-    toolView.start("pull_back");
-  }
-  
+  waterToolController.mouseRelease();
+  fireToolController.mouseRelease();
+  windToolController.mouseRelease();
   cursorController.mouseRelease();
 }
 
@@ -86,6 +79,11 @@ void keyPressed() {
 void draw() {
   background(255);
   
+  // hover
+  waterToolController.mouseHover();
+  fireToolController.mouseHover();
+  windToolController.mouseHover();
+  
   // grass
   noStroke();
   fill(100, 200, 100);
@@ -95,9 +93,9 @@ void draw() {
   treeView.render();
   
   // tools
-  for (ToolView toolView : toolViews) {
-    toolView.render();
-  }
+  waterToolView.render();
+  fireToolView.render();
+  windToolView.render();
   
   // cursor
   cursorView.render();

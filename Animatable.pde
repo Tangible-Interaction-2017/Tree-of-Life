@@ -21,6 +21,7 @@ public abstract class Animatable extends Drawable {
   }  
   
   private class _LinearAnimation extends _Animation {
+    Vector2 startPoint;
     Vector2 endPoint;
     
     _LinearAnimation(float toX, float toY, int duration) {
@@ -32,12 +33,16 @@ public abstract class Animatable extends Drawable {
   
   private HashMap<String, _Animation> _animations;
   private int _startTime; 
-  private ArrayList<String> _currentAnimations;
+  private int _transitionStartTime;
+  private int _transitionDuration;
+  private boolean _animating;
+  private _Animation _currentAnimation;
+  private _FrameAnimation _nextFrameAnimation;
   
   Animatable(float x, float y, float width, float height) {
     super(x, y, width, height);
-    _animations        = new HashMap();
-    _currentAnimations = new ArrayList();
+    _animations = new HashMap();
+    _animating  = false;
   }
   
   void addFrameAnimation(String id, String[] fileNames, int[] indices, float duration) {
@@ -56,41 +61,88 @@ public abstract class Animatable extends Drawable {
   }
   
   void start(String id) {
-    _currentAnimations.add(id);
+    _animating = true;
+    _currentAnimation = _animations.get(id);
+    if (_currentAnimation instanceof _LinearAnimation) {
+      ((_LinearAnimation)_currentAnimation).startPoint = getPosition().clone();
+    }
     _startTime = millis();
   }
   
-  void stop(String id) {
-    _currentAnimations.remove(id);
+  boolean transition(String id, float duration) {
+    _Animation animation = _animations.get(id);
+    if (animation instanceof _FrameAnimation) {
+      _nextFrameAnimation = (_FrameAnimation)animation;
+      if (_currentAnimation == null) {
+        _currentAnimation = new _FrameAnimation(new PImage[]{new PImage()}, new int[]{0}, 1);
+      }
+      _animating = true;
+      _transitionDuration = (int)(duration*1000);
+      _transitionStartTime = millis();
+      return true;
+    }
+    return false;
+  }
+  
+  void stop() {
+    _animating = false;
+    if (_currentAnimation instanceof _LinearAnimation) {
+      _LinearAnimation linearAnimation = (_LinearAnimation)_currentAnimation;
+       setPosition(linearAnimation.endPoint.x, linearAnimation.endPoint.y);
+    }
+    _currentAnimation = null;
+    _nextFrameAnimation = null;
   }
   
   void render() {
-    ArrayList<String> idsToRemove = new ArrayList();
-    for (String id : _currentAnimations) {
-      _Animation animation = _animations.get(id);
-      if (animation instanceof _FrameAnimation) {
+    if (_animating) {
+      if (_currentAnimation instanceof _FrameAnimation) {
         
-        _FrameAnimation frameAnimation = (_FrameAnimation)animation;
+        // frame animation
+        _FrameAnimation frameAnimation = (_FrameAnimation)_currentAnimation;
         int elapsed = (millis() - _startTime) % frameAnimation.duration;
-        int index = (int)Math.floor((float)elapsed / frameAnimation.duration * frameAnimation.indices.length);
-        image(frameAnimation.images[frameAnimation.indices[index]], getPosition().x, getPosition().y);
+        int index = floor((float)elapsed / frameAnimation.duration * frameAnimation.indices.length);
+         
+        if (_nextFrameAnimation == null) {
+          image(frameAnimation.images[frameAnimation.indices[index]], getPosition().x, getPosition().y);
+        } else {
+          int nextAnimationElapsed = (millis() - _startTime) % _nextFrameAnimation.duration;
+          int nextAnimationIndex = floor((float)nextAnimationElapsed / _nextFrameAnimation.duration * _nextFrameAnimation.indices.length);
+          int transitionElapsed = millis() - _transitionStartTime;
+          
+          int progress = 255;
+          if (transitionElapsed < _transitionDuration)  {
+            progress = (int)((float)transitionElapsed / _transitionDuration * 255);   
+          }
+          
+          tint(255, 255-progress);
+          image(frameAnimation.images[frameAnimation.indices[index]], getPosition().x, getPosition().y);
+          tint(255, progress);
+          image(_nextFrameAnimation.images[_nextFrameAnimation.indices[nextAnimationIndex]], getPosition().x, getPosition().y);
+          tint(255, 255); 
+          
+          if (transitionElapsed >=_transitionDuration)  {
+            _currentAnimation = _nextFrameAnimation;
+            _nextFrameAnimation = null;
+          }
+        }       
         
-      } else if (animation instanceof _LinearAnimation) {
+      } else if (_currentAnimation instanceof _LinearAnimation) {
         
-        _LinearAnimation linearAnimation = (_LinearAnimation)animation;
+        // linear path animation
+        _LinearAnimation linearAnimation = (_LinearAnimation)_currentAnimation;
         int elapsed = (millis() - _startTime);
         if (elapsed < linearAnimation.duration) {
           float t = (float)elapsed / linearAnimation.duration;
-          setPosition(getPosition().x*(1-t) + linearAnimation.endPoint.x*t, 
-                      getPosition().y*(1-t) + linearAnimation.endPoint.y*t);
+          setPosition(linearAnimation.startPoint.x*(1-t) + linearAnimation.endPoint.x*t, 
+                        linearAnimation.startPoint.y*(1-t) + linearAnimation.endPoint.y*t);
         } else {
           setPosition(linearAnimation.endPoint.x, linearAnimation.endPoint.y);
-          idsToRemove.add(id);
-        }        
+          stop();
+        }
+        
       }
     }
-    
-    for (String id : idsToRemove) stop(id);
   }
   
 }
