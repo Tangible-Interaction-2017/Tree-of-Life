@@ -8,9 +8,10 @@ ToolView windToolView;
 CursorView cursorView;
 
 // Controllers
-GrabbableController waterToolController;
-GrabbableController fireToolController;
-GrabbableController windToolController;
+TreeController treeController;
+ToolController waterToolController;
+ToolController fireToolController;
+ToolController windToolController;
 CursorController cursorController;
 
 void startAnimations() {
@@ -28,12 +29,17 @@ void setup() {
   treeView = new TreeView();
   treeView.setPosition((width-treeView.getDimensions().x)/2,
                        height/8*5-treeView.getDimensions().y+20);
+  treeController = new TreeController(treeView);
 
   waterToolView = new ToolView(ToolType.WATER, width/2-300, height-100);
   fireToolView  = new ToolView(ToolType.FIRE,  width/2,     height-100);  
   windToolView  = new ToolView(ToolType.WIND,  width/2+300, height-100);
-  waterToolController = new ToolController(waterToolView);
+  
+  Collidable[] collidables = {treeController};
+  waterToolController = new ToolController(waterToolView, collidables);
+  
   fireToolController  = new ToolController(fireToolView);
+  
   windToolController  = new ToolController(windToolView);
 
   

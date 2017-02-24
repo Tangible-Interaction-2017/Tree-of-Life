@@ -1,6 +1,13 @@
 public class ToolController extends GrabbableController {
-  ToolController(ToolView view) {
+  private final Collidable[] _collidables;
+  
+  ToolController(ToolView view, Collidable[] collidables) {
     super(view);
+    _collidables = collidables;
+  }
+  
+  ToolController(ToolView view) {
+    this(view, new Collidable[0]);
   }
   
   boolean canDrag() {
@@ -16,9 +23,12 @@ public class ToolController extends GrabbableController {
   }
   
   void didPress() {
-    if (getView().isTimeOut()) {
-      getView().start("pull_back");
-      if (getView().getType() == ToolType.WATER) getView().startTimer(10);
+    boolean isTimeOut = getView().isTimeOut();
+    if (isTimeOut) getView().start("pull_back");
+    for (Collidable collidable : _collidables) {
+      if (collide(collidable)) {
+        if (isTimeOut && getView().getType() == ToolType.WATER) getView().startTimer(10);
+      }
     }
   }
   

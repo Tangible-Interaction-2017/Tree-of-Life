@@ -1,4 +1,4 @@
-public class GrabbableController {
+public class GrabbableController extends Collidable implements Controller {
   private GrabbableView _view;
   private boolean _pressed;
   private Vector2 _dragOffset;
@@ -50,5 +50,7 @@ public class GrabbableController {
   }
   
   GrabbableView getView() { return _view; }
+  Vector2 getPosition() { return _view.getPosition(); }
+  float getRadius() { return _view.getRadius(); }
   
 }
