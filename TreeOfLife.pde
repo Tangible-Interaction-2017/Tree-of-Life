@@ -1,7 +1,7 @@
-import bluetoothDesktop.*;
+//import bluetoothDesktop.*;
 
 boolean toggle = false;
-Bluetooth bt;
+//Bluetooth bt;
 
 // Views
 TreeView treeView;
@@ -18,15 +18,15 @@ ToolController fireToolController;
 ToolController windToolController;
 CursorController cursorController;
 
-void connect() {
-  try {
-    bt = new Bluetooth(this, Bluetooth.UUID_RFCOMM);
-    bt.start("simpleService");
-    bt.find();
-  } catch (Exception e) {
-    e.printStackTrace();
-  }
-}
+///void connect() {
+//  try {
+//    bt = new Bluetooth(this, Bluetooth.UUID_RFCOMM);
+//    bt.start("simpleService");
+//    bt.find();
+//  } catch (Exception e) {
+//    e.printStackTrace();
+//  }
+//}
 
 void startAnimations() {
   if (!toggle) {

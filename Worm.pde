@@ -26,8 +26,16 @@ public class WormView extends Animatable {
     super.render();
     
     if (_direction == Direction.RIGHT) {
+      if(getPosition().x>width/2){
+        setPosition(getPosition().x, getPosition().y);
+      }
+      else{ 
       setPosition(getPosition().x+0.5, getPosition().y);
-    } else {
+      }
+  } else {
+    if(getPosition().x<width/2){
+        setPosition(getPosition().x, getPosition().y);
+      }
       setPosition(getPosition().x-0.5, getPosition().y);
     }
   }
