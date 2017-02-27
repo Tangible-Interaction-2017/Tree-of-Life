@@ -25,6 +25,69 @@ public class TreeView extends Animatable {
     indices = new int[] {
       0, 1, 2, 3
     };
-    addFrameAnimation("stage_0_dying", fileNames, indices, 1.0);
+    addFrameAnimation("stage_0_dying", fileNames, indices, 0.7);
+    
+    fileNames = new String[] {
+      "images/tree_stage_1_0.png", 
+      "images/tree_stage_1_1.png"
+    };
+    indices = new int[] {
+      0, 1
+    };
+    addFrameAnimation("stage_1", fileNames, indices, 0.7);
+    
+    fileNames = new String[] {
+      "images/tree_stage_1_dying_0.png",  
+      "images/tree_stage_1_dying_1.png", 
+      "images/tree_stage_1_dying_2.png",
+      "images/tree_stage_1_dying_3.png"
+    };
+    indices = new int[] {
+      0, 1, 2, 3
+    };
+    addFrameAnimation("stage_1_dying", fileNames, indices, 0.7);
+    
+    fileNames = new String[] {
+      "images/tree_stage_2_0.png", 
+      "images/tree_stage_2_1.png", 
+      "images/tree_stage_2_2.png", 
+      "images/tree_stage_2_3.png"
+    };
+    indices = new int[] {
+      0, 1, 2, 3
+    };
+    addFrameAnimation("stage_2", fileNames, indices, 0.7);
+    
+    fileNames = new String[] {
+      "images/tree_stage_2_dying_0.png",  
+      "images/tree_stage_2_dying_1.png", 
+      "images/tree_stage_2_dying_2.png",
+      "images/tree_stage_2_dying_3.png"
+    };
+    indices = new int[] {
+      0, 1, 2, 3
+    };
+    addFrameAnimation("stage_2_dying", fileNames, indices, 0.7);
+    
+    fileNames = new String[] {
+      "images/tree_stage_3_0.png", 
+      "images/tree_stage_3_1.png", 
+      "images/tree_stage_3_2.png"
+    };
+    indices = new int[] {
+      0, 1, 2
+    };
+    addFrameAnimation("stage_3", fileNames, indices, 0.7);
+    
+    fileNames = new String[] {
+      "images/tree_stage_3_dying_0.png",  
+      "images/tree_stage_3_dying_1.png", 
+      "images/tree_stage_3_dying_2.png",
+      "images/tree_stage_3_dying_3.png"
+    };
+    indices = new int[] {
+      0, 1, 2, 3
+    };
+    addFrameAnimation("stage_3_dying", fileNames, indices, 0.7);
   }
 }

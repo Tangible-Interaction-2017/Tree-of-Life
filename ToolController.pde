@@ -1,4 +1,5 @@
 public class ToolController extends GrabbableController {
+  private Progress _progress;
   private final Collidable[] _collidables;
   
   ToolController(ToolView view, Collidable[] collidables) {
@@ -27,7 +28,10 @@ public class ToolController extends GrabbableController {
     if (isTimeOut) getView().start("pull_back");
     for (Collidable collidable : _collidables) {
       if (collide(collidable)) {
-        if (isTimeOut && getView().getType() == ToolType.WATER) getView().startTimer(10);
+        if (isTimeOut && getView().getType() == ToolType.WATER) {
+          getView().startTimer(10);
+          _progress.addProgressChange(0.0004, 10);
+        }
       }
     }
   }
@@ -36,4 +40,6 @@ public class ToolController extends GrabbableController {
   ToolView getView() {
     return (ToolView)super.getView();
   }
+  
+  void setProgress(Progress progress) { _progress = progress; }
 }
