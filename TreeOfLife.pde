@@ -1,7 +1,11 @@
+import bluetoothDesktop.*;
+
 boolean toggle = false;
+Bluetooth bt;
 
 // Views
 TreeView treeView;
+WormView[] wormViews = new WormView[10];
 ToolView waterToolView;
 ToolView fireToolView;
 ToolView windToolView;
@@ -13,6 +17,16 @@ ToolController waterToolController;
 ToolController fireToolController;
 ToolController windToolController;
 CursorController cursorController;
+
+void connect() {
+  try {
+    bt = new Bluetooth(this, Bluetooth.UUID_RFCOMM);
+    bt.start("simpleService");
+    bt.find();
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
+}
 
 void startAnimations() {
   if (!toggle) {
@@ -27,9 +41,11 @@ void setup() {
   noCursor();
   
   treeView = new TreeView();
-  treeView.setPosition((width-treeView.getDimensions().x)/2,
-                       height/8*5-treeView.getDimensions().y+20);
   treeController = new TreeController(treeView);
+  
+  for (int i = 0; i < 10; i++) {
+    wormViews[i] = new WormView(width/2-300, height/8*5+i*25, Direction.RIGHT);
+  }
 
   waterToolView = new ToolView(ToolType.WATER, width/2-300, height-100);
   fireToolView  = new ToolView(ToolType.FIRE,  width/2,     height-100);  
@@ -47,6 +63,9 @@ void setup() {
   cursorController = new CursorController(cursorView);
   
   treeView.start("stage_0");
+  for (WormView wormView : wormViews) {
+    wormView.start("move");
+  }
 }
 
 void mouseMoved() {
@@ -97,6 +116,11 @@ void draw() {
   
   // tree
   treeView.render();
+  
+  // worm
+  for (WormView wormView : wormViews) {
+    wormView.render();
+  }
   
   // tools
   waterToolView.render();

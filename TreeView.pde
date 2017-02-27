@@ -1,6 +1,6 @@
 public class TreeView extends Animatable {
   TreeView() {
-    super(0, 0, width/10, 1.392 * width/10);
+    super(9*width/20, height/8*5 - 1.392 * width/10 + 20, width/10, 1.392 * width/10);
     
     String[] fileNames = {
       "images/tree_stage_0_0.png", 
