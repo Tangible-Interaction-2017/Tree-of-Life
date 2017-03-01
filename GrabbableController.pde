@@ -35,13 +35,14 @@ public class GrabbableController extends Collidable implements Controller {
     _view.setPressed(_pressed);
     _dragOffset.x = _view.getPosition().x - mouseX;
     _dragOffset.y = _view.getPosition().y - mouseY;
+
   }
   
   void mouseDrag() {
-  if (canDrag() && _pressed) {
-    _view.setPosition(mouseX + _dragOffset.x, mouseY + _dragOffset.y);
+    if (canDrag() && _pressed) {
+      _view.setPosition(mouseX + _dragOffset.x, mouseY + _dragOffset.y);
+    }
   }
-};
   
   void mouseRelease() {
     if (_pressed) didPress();

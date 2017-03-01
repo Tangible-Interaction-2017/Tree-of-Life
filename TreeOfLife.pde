@@ -1,5 +1,7 @@
+import processing.serial.*;
 //import bluetoothDesktop.*;
-//Bluetooth bt;
+Serial glove;
+boolean clicked = false;
 
 Progress progress;
 int stage = 0;
@@ -24,15 +26,24 @@ ToolController fireToolController;
 ToolController windToolController;
 CursorController cursorController;
 
-///void connect() {
-//  try {
-//    bt = new Bluetooth(this, Bluetooth.UUID_RFCOMM);
-//    bt.start("simpleService");
-//    bt.find();
-//  } catch (Exception e) {
-//    e.printStackTrace();
-//  }
-//}
+void connect() {
+  boolean connected = false;
+  do {
+    for (String device : Serial.list()) {
+      if (device.equals("/dev/tty.HC-06-DevB")) {
+        glove = new Serial(this, device, 96000);
+        connected = true;
+      }
+    }
+    if (!connected) {
+      println("Falled to find device \'/dev/tty.HC-06-DevB\'");
+      delay(1000);
+    }
+  } while (!connected);
+  
+  println("Found device \'/dev/tty.HC-06-DevB\'");
+  delay(1000);
+}
 
 void handleAnimations() {
   int currentStage = min(floor(progress.getProgress() * 4), 3);
@@ -53,6 +64,8 @@ void handleAnimations() {
 }
 
 void setup() {
+  connect();
+  
   fullScreen();
   noCursor();
   
@@ -122,6 +135,16 @@ void keyPressed() {
 
 void draw() {
   background(255);
+  
+  // handle input
+  int readValue = glove.read();
+  if (readValue == 1 && !clicked) {
+    clicked = true;
+    mousePressed();
+  } else if (readValue == 0 && clicked) {
+    clicked = false;
+    mouseReleased();
+  }
   
   // handle animations
   handleAnimations();
