@@ -5,11 +5,14 @@ public class WormController extends Collidable implements Controller {
     _view = view;
   }
   
-  Vector2 getPosition() { 
+  boolean isMoving() { return getView().isMoving(); }
+  boolean isOnFire() { return getView().isOnFire(); }
+  
+  Vector2 getCenter() { 
     Vector2 position   = _view.getPosition(); 
     Vector2 dimensions = _view.getDimensions(); 
-    return new Vector2(position.x, position.y + (dimensions.y-dimensions.x)/2); 
+    return new Vector2(position.x + dimensions.x/2, position.y + dimensions.y/2); 
   }
-  float getRadius()     { return getView().getDimensions().x; }
+  float getRadius()     { return getView().getDimensions().x/2; }
   WormView getView()    { return _view; }
 } 

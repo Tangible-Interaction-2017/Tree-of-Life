@@ -1,37 +1,60 @@
 public class Progress {
   private float _progress;
-  private ArrayList<Float[]> _progressChanges;
+  private HashMap<String, ArrayList<Float[]>> _progressChanges;
   
   Progress() {
     _progress = 0;
-    _progressChanges = new ArrayList();
+    _progressChanges = new HashMap();
   }
   
   void applyProgressChanges() { 
-    for (int i = _progressChanges.size()-1; i >= 0; i--) {
-      Float[] data         = _progressChanges.get(i); 
-      Float startTime      = data[0];
-      Float duration       = data[1];
-      Float progressChange = data[2];
-      
-      if ((float)millis()/1000 - startTime < duration) {
-        changeProgressBy(progressChange);
-      } else {
-        _progressChanges.remove(i);
+    ArrayList<String> idsToRemove = new ArrayList();
+    for (String dataId : _progressChanges.keySet()) {
+      ArrayList<Float[]> dataList = _progressChanges.get(dataId);
+      for (int i = dataList.size()-1; i >= 0; i--) {
+        Float[] data         = dataList.get(i);
+        Float startTime      = data[0];
+        Float duration       = data[1];
+        Float progressChange = data[2];
+        
+        if ((float)millis()/1000 - startTime < duration) {
+          changeProgressBy(progressChange);
+        } else {
+          dataList.remove(i);
+        }
       }
+      if (dataList.size() == 0) idsToRemove.add(dataId);
     }
+    for (String id : idsToRemove) _progressChanges.remove(id);
   }
   
-  void addProgressChange(float progressChange, float duration) { 
-    _progressChanges.add(new Float[] { (float)millis()/1000, duration, progressChange });
+  void addProgressChange(String id, float progressChange, float duration) { 
+    if (!_progressChanges.containsKey(id)) {
+      _progressChanges.put(id, new ArrayList());
+    } 
+    _progressChanges.get(id).add(new Float[] { (float)millis()/1000, duration, progressChange });
+  }
+  
+  void removeProgressChange(String id) {
+    if (_progressChanges.containsKey(id)) {
+      _progressChanges.get(id).remove(_progressChanges.get(id).size()-1);
+      if (_progressChanges.get(id).size() == 0) _progressChanges.remove(id);
+    }
   }
   
   float getTotalProgressChange() {
     float total = 0;
-    for (Float[] data : _progressChanges) {
-      total += data[2];
+    for (String id : _progressChanges.keySet()) {
+      for (Float[] data : _progressChanges.get(id)) {
+        total += data[2];
+      }
     }
     return total;
+  }
+  
+  void resetProgress() { 
+    _progress = 0;
+    _progressChanges.clear(); 
   }
   
   void changeProgressBy(float delta) { _progress = min(max(_progress+delta, 0), 1); }

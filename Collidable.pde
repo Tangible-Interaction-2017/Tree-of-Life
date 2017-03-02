@@ -1,8 +1,8 @@
 public abstract class Collidable {
   boolean collide(Collidable collider) {
-    return dist(getPosition().x, getPosition().y, collider.getPosition().x, collider.getPosition().y) <= getRadius() + collider.getRadius();
+    return dist(getCenter().x, getCenter().y, collider.getCenter().x, collider.getCenter().y) <= getRadius() + collider.getRadius();
   } 
   
-  abstract Vector2 getPosition();
+  abstract Vector2 getCenter();
   abstract float getRadius();
 } 

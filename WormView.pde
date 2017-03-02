@@ -1,66 +1,81 @@
 public class WormView extends Animatable {
   private Direction _direction;
-  private boolean _move, _flying;
+  private int _burnStartTime;
+  private boolean _move, _flying, _burning;
   private boolean _reachedTree;
   private NutrientDropView _dropView;
   private PImage _image;
 
-  WormView(int x, int y, Direction direction) {
-    super(x, y, 89, 25); //<>// //<>//
+  WormView(int x, int y, Direction direction) { //<>//
+    super(x, y, 89, 25); //<>//
     _direction = direction;
     _move = false;
     _reachedTree = false;
+    _burnStartTime = 0;
     _dropView = new NutrientDropView(width/2+25,  y+10);
 
+    String directionString = "";
     if (direction == Direction.RIGHT) {
-      _image = loadImage("images/worm_right_0.png");
-      String[] fileNames = {
-        "images/worm_right_0.png",
-        "images/worm_right_1.png"
-      };
-      int[] indices = { 0, 1 };
-      addFrameAnimation("move", fileNames, indices, 0.4);
+      directionString = "right";
       addLinearAnimation("fly_out", -89, -25, 0.7);
     } else {
-      _image = loadImage("images/worm_left_0.png");
-      String[] fileNames = {
-        "images/worm_left_0.png",
-        "images/worm_left_1.png"
-      };
-      int[] indices = { 0, 1 };
-      addFrameAnimation("move", fileNames, indices, 0.4);
+      directionString = "left";
       addLinearAnimation("fly_out", width, -25, 0.7);
     }
+    
+    _image = loadImage("images/worm_" + directionString +"_0.png");
+    String[] fileNames = {
+      "images/worm_" + directionString + "_0.png",
+      "images/worm_" + directionString + "_1.png"
+    };
+    int[] indices = { 0, 1 };
+    addFrameAnimation("move", fileNames, indices, 0.4);
+      
+    fileNames = new String[]{
+      "images/worm_" + directionString + "_burn_0.png",
+      "images/worm_" + directionString + "_burn_1.png"
+    };
+    indices = new int[]{ 0, 1 };
+    addFrameAnimation("fire", fileNames, indices, 0.4);
   }
 
   @Override
   void start(String id) {
-    super.start(id);
+    if (!_burning) {
+      super.start(id);
 
-    _flying = id == "fly_out";
-    _move = id.equals("move");
+      _flying  = id.equals("fly_out");
+    
+      _burning = id.equals("fire");
+      if (_burning) {
+        _burnStartTime = millis();
+      }
+      _move = id.equals("move");
+    }
+  }
+  
+  void reset() {
+    if (_direction == Direction.RIGHT) {
+      setPosition(-89, height/8*5 + (int)random(25));
+    } else {
+      setPosition(width, height/8*5 + (int)random(25));
+    }
+    _dropView.setPosition(width/2+_dropView.getDimensions().x/2, getPosition().y+25);
+    _reachedTree = false;
+    _move = _flying = _burning = false;
   }
 
   @Override
   void stop() {
     super.stop();
 
-    if (_flying) {
-      if (_direction == Direction.RIGHT) {
-        setPosition(-89, height/8*5 + (int)random(25));
-      } else {
-        setPosition(width, height/8*5 + (int)random(25));
-      }
-      _dropView.setPosition(width/2+_dropView.getDimensions().x/2, getPosition().y+25);
-      _reachedTree = false;
-      _flying = false;
-    }
+    if (_flying  || _burning) reset();
     _move = false;
   }
 
-  boolean reachedTree() {
-    return _reachedTree;
-  }
+  boolean reachedTree() { return _reachedTree; }
+  boolean isMoving() { return _move; }
+  boolean isOnFire() { return _burning; }
 
   NutrientDropView getDropView() { return _dropView; }
 
@@ -71,6 +86,10 @@ public class WormView extends Animatable {
     }
 
     super.render();
+    
+    if (_burning && (millis()-_burnStartTime) > 3000) {
+      stop();
+    }
 
     if (!_reachedTree && _move) {
       if (_direction == Direction.RIGHT) {

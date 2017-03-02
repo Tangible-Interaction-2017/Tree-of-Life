@@ -51,7 +51,7 @@ public class GrabbableController extends Collidable implements Controller {
   }
   
   GrabbableView getView() { return _view; }
-  Vector2 getPosition() { return _view.getPosition(); }
+  Vector2 getCenter() { return _view.getPosition().clone(); }
   float getRadius() { return _view.getRadius(); }
   
 }
