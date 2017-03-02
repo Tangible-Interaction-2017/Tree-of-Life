@@ -41,7 +41,7 @@ void connect() {
       delay(1000);
     }
   } while (!connected);
-  
+
   println("Found device \'/dev/tty.HC-06-DevB\'");
   delay(1000);
 }
@@ -49,15 +49,15 @@ void connect() {
 void handleAnimations() {
   int currentStage = min(floor(progress.getProgress() * 4), 3);
   float totalProgressChange = progress.getTotalProgressChange();
-  
+
   if (!isDying && totalProgressChange < 0) {
     isDying = true;
     treeView.start("stage_" + stage + "_dying");
   } else if (isDying && totalProgressChange > 0) {
-    isDying = false; 
+    isDying = false;
     treeView.start("stage_" + stage);
   }
- 
+
   if (currentStage != stage) {
     stage = currentStage;
     treeView.transition("stage_" + stage + (isDying ? "_dying" : ""), 0.5);
@@ -66,16 +66,16 @@ void handleAnimations() {
 
 void setup() {
   //connect();
-  
+
   fullScreen();
   noCursor();
-  
+
   progress = new Progress();
   //progress.addProgressChange(-0.0001, Float.POSITIVE_INFINITY);
-  
+
   treeView = new TreeView();
   treeController = new TreeController(treeView);
-  
+
   for (int i = 0; i < wormViews.length; i++) {
     Direction direction = Direction.RIGHT;
     int x = -89; // 89, 25
@@ -89,20 +89,20 @@ void setup() {
   }
 
   waterToolView = new ToolView(ToolType.WATER, width/2-300, height-100);
-  fireToolView  = new ToolView(ToolType.FIRE,  width/2,     height-100);  
+  fireToolView  = new ToolView(ToolType.FIRE,  width/2,     height-100);
   windToolView  = new ToolView(ToolType.WIND,  width/2+300, height-100);
   waterToolController = new ToolController(waterToolView, new Collidable[]{treeController});
   waterToolController.setProgress(progress);
   fireToolController  = new ToolController(fireToolView);
   windToolController  = new ToolController(windToolView, wormControllers);
-  
+
   progressView = new ProgressView(progress);
-  
+
   cursorView = new CursorView(mouseX, mouseY);
   cursorController = new CursorController(cursorView);
-  
+
   nextWormTime = (float)millis()/1000 + 10 + random(10);
-  
+
   treeView.start("stage_0");
 }
 
@@ -117,7 +117,7 @@ void mouseMoved() {
 }
 
 void mouseDragged() {
-  
+
   waterToolController.mouseDrag();
   fireToolController.mouseDrag();
   windToolController.mouseDrag();
@@ -144,7 +144,7 @@ void keyPressed() {
 
 void draw() {
   background(255);
-  
+
   // handle input
   /*
   int readValue = glove.read();
@@ -156,30 +156,30 @@ void draw() {
     mouseReleased();
   }
   */
-  
+
   // handle animations
   handleAnimations();
-  
+
   // hover
   waterToolController.mouseHover();
   fireToolController.mouseHover();
   windToolController.mouseHover();
-  
+
   // grass
   noStroke();
   fill(100, 200, 100);
   rect(0, height/8*5, width, height/2);
-  
+
   // tree
   treeView.render();
-  
+
   // worms
   if ((float)millis()/1000 > nextWormTime && currentWormIndex < 18) {
     wormViews[currentWormIndex].start("move");
     nextWormTime = (float)millis()/1000 + 10 - (float)currentWormIndex/2 + random(20 - (float)currentWormIndex);
     currentWormIndex = (currentWormIndex + 1) % wormControllers.length;
   }
-  
+
   int currentWormsAtTree = 0;
   for (WormView wormView : wormViews) {
     wormView.render();
@@ -201,15 +201,15 @@ void draw() {
     }
     previousWormsAtTree = currentWormsAtTree;
   }
-  
+
   // progress bar
   progressView.render();
-  
+
   // tools
   waterToolView.render();
   fireToolView.render();
   windToolView.render();
-  
+
   // cursor
   cursorView.render();
 }
