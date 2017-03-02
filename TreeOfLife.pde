@@ -9,6 +9,7 @@ boolean isDying = false;
 float nextWormTime = 0;
 int currentWormIndex = 0;
 int previousWormsAtTree = 0;
+float frequency = 0;
 
 // Views
 TreeView treeView;
@@ -53,7 +54,7 @@ void handleAnimations() {
   if (!isDying && totalProgressChange < 0) {
     isDying = true;
     treeView.start("stage_" + stage + "_dying");
-  } else if (isDying && totalProgressChange > 0) {
+  } else if (isDying && totalProgressChange >= 0) {
     isDying = false;
     treeView.start("stage_" + stage);
   }
@@ -71,7 +72,7 @@ void setup() {
   noCursor();
 
   progress = new Progress();
-  //progress.addProgressChange(-0.0001, Float.POSITIVE_INFINITY);
+  progress.addProgressChange(-0.0001, Float.POSITIVE_INFINITY);
 
   treeView = new TreeView();
   treeController = new TreeController(treeView);
@@ -93,7 +94,13 @@ void setup() {
   windToolView  = new ToolView(ToolType.WIND,  width/2+300, height-100);
   waterToolController = new ToolController(waterToolView, new Collidable[]{treeController});
   waterToolController.setProgress(progress);
-  fireToolController  = new ToolController(fireToolView);
+  
+  Collidable[] fireToolCollidables = new Collidable[wormControllers.length+1];
+  for (int i = 0; i < wormControllers.length; i++) {
+    fireToolCollidables[i] = wormControllers[i];
+  }
+  fireToolCollidables[wormControllers.length] = treeController;
+  fireToolController  = new ToolController(fireToolView, fireToolCollidables);
   windToolController  = new ToolController(windToolView, wormControllers);
 
   progressView = new ProgressView(progress);
@@ -174,10 +181,11 @@ void draw() {
   treeView.render();
 
   // worms
-  if ((float)millis()/1000 > nextWormTime && currentWormIndex < 18) {
+  if ((float)millis()/1000 > nextWormTime) {
     wormViews[currentWormIndex].start("move");
-    nextWormTime = (float)millis()/1000 + 10 - (float)currentWormIndex/2 + random(20 - (float)currentWormIndex);
+    nextWormTime = (float)millis()/1000 + 5 - frequency * 0.5 + random(5 - frequency * 0.5);
     currentWormIndex = (currentWormIndex + 1) % wormControllers.length;
+    frequency = min(frequency + 7, 7);
   }
 
   int currentWormsAtTree = 0;

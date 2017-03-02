@@ -6,6 +6,8 @@ public class CursorView extends GrabbableView {
     super(x, y); 
     _opened = loadImage("images/cursor_opened.png");
     _closed = loadImage("images/cursor_closed.png");
+    _opened.resize(97, 124);
+    _closed.resize(81, 85);
   }
   
   void render() {

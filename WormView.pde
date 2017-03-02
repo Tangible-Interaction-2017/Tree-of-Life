@@ -6,7 +6,7 @@ public class WormView extends Animatable {
   private PImage _image;
 
   WormView(int x, int y, Direction direction) {
-    super(x, y, 89, 25); //<>//
+    super(x, y, 89, 25); //<>// //<>//
     _direction = direction;
     _move = false;
     _reachedTree = false;
@@ -74,18 +74,18 @@ public class WormView extends Animatable {
 
     if (!_reachedTree && _move) {
       if (_direction == Direction.RIGHT) {
-        if(getPosition().x>(width/2-getDimensions().x)){
-          _dropView.start("drop");
-        }
-        else{
-        setPosition(getPosition().x+5, getPosition().y);
-        }
-    } else {
-      if (getPosition().x<width/2){
+        if (getPosition().x > width/2 - getDimensions().x) {
           _reachedTree = true;
           _dropView.start("drop");
         } else {
-          setPosition(getPosition().x-5, getPosition().y);
+          setPosition(getPosition().x+1, getPosition().y);
+        }
+    } else {
+      if (getPosition().x < width/2) {
+          _reachedTree = true;
+          _dropView.start("drop");
+        } else {
+          setPosition(getPosition().x-1, getPosition().y);
         }
       }
     }

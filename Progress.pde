@@ -3,7 +3,7 @@ public class Progress {
   private ArrayList<Float[]> _progressChanges;
   
   Progress() {
-    _progress = 0.375;
+    _progress = 0;
     _progressChanges = new ArrayList();
   }
   

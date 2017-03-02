@@ -32,10 +32,13 @@ public class ToolController extends GrabbableController {
           case WATER:
             if (isTimeOut) {
               getView().startTimer(10);
-              _progress.addProgressChange(0.0001, 10);
+              _progress.addProgressChange(0.0002, 10);
             }
             break;
           case FIRE:
+            Controller controller = (Controller)collidable;
+            Animatable animatable = (Animatable)controller.getView();
+            animatable.start("fire");
             break;  
           case WIND:
             WormController wormController = (WormController)collidable;
