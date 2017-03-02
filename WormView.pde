@@ -63,6 +63,7 @@ public class WormView extends Animatable {
     } else {
       if(getPosition().x<width/2){
           _reachedTree = true;
+          _drop.start("drop");
         } else {
         setPosition(getPosition().x-5, getPosition().y);
         }

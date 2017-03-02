@@ -173,11 +173,16 @@ void draw() {
   
   int currentWormsAtTree = 0;
   for (WormView wormView : wormViews) {
-    if (wormView.reachedTree()) currentWormsAtTree++;
-      {
-        wormView.render();
-        wormView.getDrop().render();
-      }
+    wormView.render();
+    if (wormView.reachedTree()) 
+    {
+      currentWormsAtTree++;
+      wormView.getDrop().render();
+    }
+      
+      
+        
+      
   }
   if (currentWormsAtTree > previousWormsAtTree) {
     previousWormsAtTree = currentWormsAtTree;
