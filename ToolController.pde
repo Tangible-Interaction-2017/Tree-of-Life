@@ -28,9 +28,19 @@ public class ToolController extends GrabbableController {
     if (isTimeOut) getView().start("pull_back");
     for (Collidable collidable : _collidables) {
       if (collide(collidable)) {
-        if (isTimeOut && getView().getType() == ToolType.WATER) {
-          getView().startTimer(10);
-          _progress.addProgressChange(0.0004, 10);
+        switch (getView().getType()) {
+          case WATER:
+            if (isTimeOut) {
+              getView().startTimer(10);
+              _progress.addProgressChange(0.0001, 10);
+            }
+            break;
+          case FIRE:
+            break;  
+          case WIND:
+            WormController wormController = (WormController)collidable;
+            wormController.getView().start("fly_out");
+            break;
         }
       }
     }

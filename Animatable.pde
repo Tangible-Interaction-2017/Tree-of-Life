@@ -28,7 +28,21 @@ public abstract class Animatable extends Drawable {
       super(duration);
       this.endPoint = new Vector2(toX, toY);
     }
+  }
+  
+  private class _ColorAnimation extends _Animation {
+    int startR, startG, startB, endR, endG, endB;
     
+    
+    _ColorAnimation(int fromR, int fromG, int fromB, int toR, int toG, int toB, int duration) {
+      super(duration);
+      this.startR = fromR;
+      this.startG = fromG;
+      this.startB = fromB;
+      this.endR   = toR;
+      this.endG   = toG;
+      this.endB   = toB;
+    }
   }
   
   private HashMap<String, _Animation> _animations;
@@ -58,6 +72,10 @@ public abstract class Animatable extends Drawable {
  
   void addLinearAnimation(String id, float toX, float toY, float duration) {
     _animations.put(id, new _LinearAnimation(toX, toY, (int)(duration*1000)));
+  }
+  
+  void addColorAnimation(String id, int fromR, int fromG, int fromB, int toR, int toG, int toB, float duration) {
+    _animations.put(id, new _ColorAnimation(fromR, fromG, fromB, toR, toG, toB, (int)(duration*1000)));
   }
   
   void start(String id) {
@@ -140,7 +158,19 @@ public abstract class Animatable extends Drawable {
           setPosition(linearAnimation.endPoint.x, linearAnimation.endPoint.y);
           stop();
         }
-        
+      } else if (_currentAnimation instanceof _ColorAnimation) {
+        _ColorAnimation colorAnimation = (_ColorAnimation)_currentAnimation;
+        int elapsed = (millis() - _startTime);
+        if (elapsed < colorAnimation.duration) {
+          float t = (float)elapsed / colorAnimation.duration;
+          int r = (int)(colorAnimation.startR * (1-t) + colorAnimation.endR * t);
+          int g = (int)(colorAnimation.startG * (1-t) + colorAnimation.endG * t);
+          int b = (int)(colorAnimation.startB * (1-t) + colorAnimation.endB * t);
+          setColor(r, g, b);
+        } else {
+          setColor(colorAnimation.endR, colorAnimation.endG, colorAnimation.endB);
+          stop();
+        }
       }
     }
   }

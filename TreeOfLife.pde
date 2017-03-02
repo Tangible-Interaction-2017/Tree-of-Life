@@ -21,6 +21,7 @@ CursorView cursorView;
 
 // Controllers
 TreeController treeController;
+WormController[] wormControllers = new WormController[10];
 ToolController waterToolController;
 ToolController fireToolController;
 ToolController windToolController;
@@ -64,18 +65,18 @@ void handleAnimations() {
 }
 
 void setup() {
-  connect();
+  //connect();
   
   fullScreen();
   noCursor();
   
   progress = new Progress();
-  progress.addProgressChange(-0.0001, Float.POSITIVE_INFINITY);
+  //progress.addProgressChange(-0.0001, Float.POSITIVE_INFINITY);
   
   treeView = new TreeView();
   treeController = new TreeController(treeView);
   
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < wormViews.length; i++) {
     Direction direction = Direction.RIGHT;
     int x = -89; // 89, 25
     int y = height/8*5;
@@ -84,6 +85,7 @@ void setup() {
       x = width;
     }
     wormViews[i] = new WormView(x, y + (int)random(25), direction);
+    wormControllers[i] = new WormController(wormViews[i]);
   }
 
   waterToolView = new ToolView(ToolType.WATER, width/2-300, height-100);
@@ -92,7 +94,7 @@ void setup() {
   waterToolController = new ToolController(waterToolView, new Collidable[]{treeController});
   waterToolController.setProgress(progress);
   fireToolController  = new ToolController(fireToolView);
-  windToolController  = new ToolController(windToolView);
+  windToolController  = new ToolController(windToolView, wormControllers);
   
   progressView = new ProgressView(progress);
   
@@ -106,6 +108,20 @@ void setup() {
 
 void mouseMoved() {
   cursorController.mouseMove();
+  /*
+  waterToolController.mouseDrag();
+  fireToolController.mouseDrag();
+  windToolController.mouseDrag();
+  cursorController.mouseDrag();
+  */
+}
+
+void mouseDragged() {
+  
+  waterToolController.mouseDrag();
+  fireToolController.mouseDrag();
+  windToolController.mouseDrag();
+  cursorController.mouseDrag();
 }
 
 void mousePressed() {
@@ -113,13 +129,6 @@ void mousePressed() {
   fireToolController.mousePress();
   windToolController.mousePress();
   cursorController.mousePress();
-}
-
-void mouseDragged() {
-  waterToolController.mouseDrag();
-  fireToolController.mouseDrag();
-  windToolController.mouseDrag();
-  cursorController.mouseDrag();
 }
 
 void mouseReleased() {
@@ -137,6 +146,7 @@ void draw() {
   background(255);
   
   // handle input
+  /*
   int readValue = glove.read();
   if (readValue == 1 && !clicked) {
     clicked = true;
@@ -145,6 +155,7 @@ void draw() {
     clicked = false;
     mouseReleased();
   }
+  */
   
   // handle animations
   handleAnimations();
@@ -163,20 +174,32 @@ void draw() {
   treeView.render();
   
   // worms
-  if ((float)millis()/1000 > nextWormTime && currentWormIndex < 10) {
+  if ((float)millis()/1000 > nextWormTime && currentWormIndex < 18) {
     wormViews[currentWormIndex].start("move");
-    nextWormTime = (float)millis()/1000 + 10 - (float)currentWormIndex/2 + random(10 - (float)currentWormIndex/2);
-    currentWormIndex++;
+    nextWormTime = (float)millis()/1000 + 10 - (float)currentWormIndex/2 + random(20 - (float)currentWormIndex);
+    currentWormIndex = (currentWormIndex + 1) % wormControllers.length;
   }
   
   int currentWormsAtTree = 0;
   for (WormView wormView : wormViews) {
-    if (wormView.reachedTree()) currentWormsAtTree++;
     wormView.render();
+    wormView.getDropView().render();
+    if (wormView.reachedTree()) {
+      currentWormsAtTree++;
+    }
   }
   if (currentWormsAtTree > previousWormsAtTree) {
+    for (int i = 0; i < currentWormsAtTree - previousWormsAtTree; i++) {
+      progress.addProgressChange(-0.00005, Float.POSITIVE_INFINITY);
+      progress.addProgressChange(0.001, 0.5);
+      progressView.start("boost");
+    }
     previousWormsAtTree = currentWormsAtTree;
-    progress.addProgressChange(-0.00005, Float.POSITIVE_INFINITY);
+  } else if (currentWormsAtTree < previousWormsAtTree) {
+    for (int i = 0; i < previousWormsAtTree - currentWormsAtTree; i++) {
+      progress.addProgressChange(0.00005, Float.POSITIVE_INFINITY);
+    }
+    previousWormsAtTree = currentWormsAtTree;
   }
   
   // progress bar

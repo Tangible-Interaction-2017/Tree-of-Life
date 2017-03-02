@@ -3,12 +3,12 @@ public class Progress {
   private ArrayList<Float[]> _progressChanges;
   
   Progress() {
-    _progress = 0;
+    _progress = 0.375;
     _progressChanges = new ArrayList();
   }
   
   void applyProgressChanges() { 
-    for (int i = 0; i < _progressChanges.size(); i++) {
+    for (int i = _progressChanges.size()-1; i >= 0; i--) {
       Float[] data         = _progressChanges.get(i); 
       Float startTime      = data[0];
       Float duration       = data[1];

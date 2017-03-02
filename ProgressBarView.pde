@@ -1,12 +1,16 @@
-public class ProgressView extends Drawable {
+public class ProgressView extends Animatable {
   private Progress _progress;
   
   ProgressView(Progress progress) {
     super(width/8, 30, width/4*3, 35);
     _progress = progress;
+    setColor(250, 175, 175);
+    
+    addColorAnimation("boost", 175, 250, 175, 250, 175, 175, 0.5);
   }
   
   void render() {
+    super.render();
     
     Vector2 pos = getPosition();
     Vector2 dim = getDimensions();
@@ -16,7 +20,7 @@ public class ProgressView extends Drawable {
     
     // progress bar
     noStroke();
-    fill(250, 175, 175);
+    fill(getRed(), getGreen(), getBlue());
     rect(pos.x, pos.y, dim.x*_progress.getProgress(), dim.y);
     
     // frame
