@@ -64,7 +64,7 @@ void handleAnimations() {
 }
 
 void setup() {
-  connect();
+  //connect();
   
   fullScreen();
   noCursor();
@@ -137,6 +137,7 @@ void draw() {
   background(255);
   
   // handle input
+  /*
   int readValue = glove.read();
   if (readValue == 1 && !clicked) {
     clicked = true;
@@ -145,6 +146,7 @@ void draw() {
     clicked = false;
     mouseReleased();
   }
+  */
   
   // handle animations
   handleAnimations();
@@ -172,7 +174,10 @@ void draw() {
   int currentWormsAtTree = 0;
   for (WormView wormView : wormViews) {
     if (wormView.reachedTree()) currentWormsAtTree++;
-    wormView.render();
+      {
+        wormView.render();
+        wormView.getDrop().render();
+      }
   }
   if (currentWormsAtTree > previousWormsAtTree) {
     previousWormsAtTree = currentWormsAtTree;
