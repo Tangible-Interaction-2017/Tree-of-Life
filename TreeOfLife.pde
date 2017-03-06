@@ -40,8 +40,10 @@ void connect() {
   do {
     for (String device : Serial.list()) {
       if (device.equals("/dev/tty.HC-06-DevB")) {
-        glove = new Serial(this, device, 96000);
-        connected = true;
+        try {
+          glove = new Serial(this, device, 9600);
+          connected = true;
+        } catch (Exception e) {}
       }
     }
     if (!connected) {
@@ -73,7 +75,7 @@ void handleAnimations() {
 }
 
 void setup() {
-  //connect();
+  connect();
   
   fullScreen();
   noCursor();
@@ -124,27 +126,17 @@ void setup() {
 }
 
 void mouseMoved() {
+  println("Moved");
   cursorController.mouseMove();
-  /*
   waterToolController.mouseDrag();
   fireToolController.mouseDrag();
   windToolController.mouseDrag();
   cursorController.mouseDrag();
-  */
-}
-
-void mouseDragged() {
-  cursorController.mouseDrag();
-  if (!gameOver) {
-    waterToolController.mouseDrag();
-    fireToolController.mouseDrag();
-    windToolController.mouseDrag();
-  } else {
-    seedController.mouseDrag();
-  }
+  seedController.mouseDrag();
 }
 
 void mousePressed() {
+  println("Pressed");
   cursorController.mousePress();
   if (!gameOver) {
     waterToolController.mousePress();
@@ -156,6 +148,7 @@ void mousePressed() {
 }
 
 void mouseReleased() {
+  println("Released");
   cursorController.mouseRelease();
   if (!gameOver) {
     waterToolController.mouseRelease();
@@ -196,16 +189,16 @@ void draw() {
   background(255);
 
   // handle input
-  /*
   int readValue = glove.read();
   if (readValue == 1 && !clicked) {
     clicked = true;
+    println("Grasped");
     mousePressed();
   } else if (readValue == 0 && clicked) {
     clicked = false;
+    println("Released");
     mouseReleased();
   }
-  */
 
   // handle animations
   handleAnimations();
