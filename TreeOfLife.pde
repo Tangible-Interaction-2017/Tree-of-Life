@@ -126,7 +126,6 @@ void setup() {
 }
 
 void mouseMoved() {
-  println("Moved");
   cursorController.mouseMove();
   waterToolController.mouseDrag();
   fireToolController.mouseDrag();
@@ -136,7 +135,6 @@ void mouseMoved() {
 }
 
 void mousePressed() {
-  println("Pressed");
   cursorController.mousePress();
   if (!gameOver) {
     waterToolController.mousePress();
@@ -148,7 +146,6 @@ void mousePressed() {
 }
 
 void mouseReleased() {
-  println("Released");
   cursorController.mouseRelease();
   if (!gameOver) {
     waterToolController.mouseRelease();
@@ -190,6 +187,7 @@ void draw() {
 
   // handle input
   int readValue = glove.read();
+  println(readValue);
   if (readValue == 1 && !clicked) {
     clicked = true;
     println("Grasped");
