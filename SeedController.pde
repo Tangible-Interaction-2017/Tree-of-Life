@@ -15,7 +15,7 @@ public class SeedController extends GrabbableController {
   }
   
   Vector2 getCenter() { return new Vector2(getView().getPosition().x+getRadius(), getView().getPosition().y+getRadius()); }
-  float getRadius() { return getView().getDimensions().x/2+10; };
+  float getRadius() { return getView().getDimensions().x/2+20; };
   
   boolean isActivated() { return _activated; }
   void deactivate() { 
