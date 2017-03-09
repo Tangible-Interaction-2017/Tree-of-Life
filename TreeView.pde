@@ -2,7 +2,7 @@ public class TreeView extends Animatable {
   private boolean _isOnFire;
   
   TreeView() {
-    super(width/2 - width/10, height/8*5 - 1.392 * width/5 + 20, width/5, 1.392 * width/5);
+    super(width/2 - 1.1*width/10, height/8*5 - 1.1*1.392 * width/5 + 20, 1.1*width/5, 1.1*1.392 * width/5);
     
     _isOnFire = false;
     

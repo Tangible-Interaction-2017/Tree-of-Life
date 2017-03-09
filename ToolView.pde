@@ -6,7 +6,7 @@ public class ToolView extends GrabbableView {
   private PImage _image;
   
   ToolView(ToolType type, float x, float y) {
-    super(x, y); 
+    super(x, y, 75); 
     _type = type;
     
     switch (_type) {
@@ -15,6 +15,7 @@ public class ToolView extends GrabbableView {
       case WIND:  _image = loadImage("images/tool_wind.png");  break;
     }
     
+    _image.resize(150, 150);
     addLinearAnimation("pull_back", x, y, 0.25);
   }
   
@@ -32,7 +33,7 @@ public class ToolView extends GrabbableView {
     float elapsed = (float)(millis()-_startTime)/1000;
     _timeOut = elapsed >= _timer;
     if (!_timeOut) tint(255, 50);
-    image(_image, getPosition().x-50, getPosition().y-50);
+    image(_image, getPosition().x-75, getPosition().y-75);
     tint(255, 255);
     
     if (isHovered()) {

@@ -134,6 +134,15 @@ void mouseMoved() {
   seedController.mouseDrag();
 }
 
+void mouseDragged() {
+  cursorController.mouseDrag();
+  waterToolController.mouseDrag();
+  fireToolController.mouseDrag();
+  windToolController.mouseDrag();
+  cursorController.mouseDrag();
+  seedController.mouseDrag();
+}
+
 void mousePressed() {
   cursorController.mousePress();
   if (!gameOver) {
@@ -162,6 +171,7 @@ void keyPressed() {
 }
 
 void gameOver() {
+  delay(5000);
   gameOver = true;
   seedController.deactivate();
 }
@@ -180,6 +190,7 @@ void reset() {
   treeView.start("stage_0");
   nextWormTime = (float)millis()/1000 + 10 + random(10);
   startTime = (float)millis()/1000;
+  frequency = 0;
 }
 
 void draw() {

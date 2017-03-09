@@ -97,14 +97,14 @@ public class WormView extends Animatable {
           _reachedTree = true;
           _dropView.start("drop");
         } else {
-          setPosition(getPosition().x+1, getPosition().y);
+          setPosition(getPosition().x+1.25, getPosition().y);
         }
     } else {
       if (getPosition().x < width/2) {
           _reachedTree = true;
           _dropView.start("drop");
         } else {
-          setPosition(getPosition().x-1, getPosition().y);
+          setPosition(getPosition().x-1.25, getPosition().y);
         }
       }
     }
